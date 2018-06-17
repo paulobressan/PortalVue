@@ -1,17 +1,34 @@
 <template>
 <!-- template ou html, parte visual do componente -->
     <div class="painel">
-        <h2 class="painel-titulo">{{titulo}}</h2>
-        <!-- Slot é para definir onde o conteudo passado de outros componente vai ser exibido. -->
-        <slot class="painel-conteudo"></slot>
+        <!-- Envento double click do js  -->
+        <h2 class="painel-titulo" @dblclick="visivel = !visivel">{{titulo}}</h2>
+        <transition name="painel-fade">
+            <!-- O v-show aplica um display no container -->
+            <div class="painel-conteudo" v-show="visivel">
+                <!-- Slot é para definir onde o conteudo passado de outros componente vai ser exibido. -->
+                <slot></slot>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script>
 //dados do componente
 export default {
-    //aplicando props para receber dados de outros componentes
-    props: ['titulo']
+  //aplicando props para receber dados de outros componentes
+  props: {
+    titulo:{
+      type:String,
+      required: true
+    }
+  },//OU props: ["titulo"]; A primeira é uma boa pratica!
+
+  data() {
+    return {
+      visivel: true
+    };
+  }
 };
 </script>
 
@@ -41,7 +58,15 @@ export default {
   text-transform: uppercase;
 }
 
-*  {
-    box-shadow: 5px 5px 10px black;
+* {
+  box-shadow: 5px 5px 10px black;
+}
+
+.painel-fade-enter, .painel-fade-leave-active{
+    opacity: 0;
+}
+
+.painel-fade-enter-active, .painel-fade-leave-active{
+    transition: opacity .4s;
 }
 </style>

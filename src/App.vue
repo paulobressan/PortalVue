@@ -1,68 +1,45 @@
 <template>
 <!-- template ou html, parte visual do componente -->
   <div class="corpo">
-    <h1 class="centralizado">{{titulo}}</h1>
-    <ul class="lista-produtos">
-      <li class="lista-produtos-item" v-for="produto in produtos">
-        <meu-painel :titulo="produto.nome">
-          <figure>             
-            <img :src="produto.url" :alt="produto.nome">
-          </figure>
-        </meu-painel>      
-      </li>
-    </ul>
+    <meu-menu :rotas="routes"></meu-menu>
+    <!-- aplicar estilo ao trocar de componente -->
+    <transition name="pagina">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
-
-//importando outros componentes
-import Painel from './components/shared/painel/Painel.vue';
-
+import {routes} from './routes';
+import Menu from './components/shared/menu/Menu.vue';
 
 //dados do componente
 export default {
-  //Propriedade components para usar outros componentes, desde que estaja importado.
   components: {
-    'meu-painel': Painel
+    'meu-menu': Menu
   },
-  name: "app",
-  data() {
-    //dados ou objeto do componente.
+
+  data(){
     return {
-      titulo: "Produtos",
-      produtos: []
-    };
-  },
-  created() {
-    this.$http
-      .get("http://localhost:5000/api/product")
-      .then(res => res.json())
-      .then(produtos => (this.produtos = produtos));
+      routes
+    }
   }
-};
+}
 </script>
 
 <style>
 /* Estilo do componente */
-img {
-  width: 100%;
-}
 .corpo {
   font-family: Arial, Helvetica, sans-serif;
   width: 90%;
   margin: 0 auto;
 }
 
-.centralizado {
-  text-align: center;
+.pagina-enter, .pagina-leave-active{
+    opacity: 0;
 }
 
-.lista-produtos {
-  list-style: none;
-}
-
-.lista-produtos-item {
-  display: inline-block;
+.pagina-enter-active, .pagina-leave-active{
+    transition: opacity .4s;
 }
 </style>
