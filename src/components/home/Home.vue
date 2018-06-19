@@ -11,6 +11,7 @@
           <figure> 
             <imagem-responsiva :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
           </figure>
+          <meu-botao tipo="button" rotulo="Remover" @click.native="remove(produto)"></meu-botao>
         </meu-painel>      
       </li>
     </ul>
@@ -18,17 +19,18 @@
 </template>
 
 <script>
-
 //importando outros componentes
-import Painel from '../shared/painel/Painel.vue';
-import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
+import Painel from "../shared/painel/Painel.vue";
+import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue";
+import Botao from "../shared/botao/botao.vue";
 
 //dados do componente
 export default {
   //Propriedade components para usar outros componentes, desde que estaja importado.
   components: {
-    'meu-painel': Painel,
-    'imagem-responsiva' : ImagemResponsiva
+    "meu-painel": Painel,
+    "imagem-responsiva": ImagemResponsiva,
+    "meu-botao": Botao
   },
   name: "app",
   data() {
@@ -44,36 +46,42 @@ export default {
   //assim podemos filtrar uma lista atravez de uma propriedade que por tras dos panos é um metodo.
   computed: {
     //filtro da lista de produtos
-    fotosComFiltro(){
-      if(this.filtro){
+    fotosComFiltro() {
+      if (this.filtro) {
         //Expressão regular
-        let exp = new RegExp(this.filtro.trim(), 'i');
+        let exp = new RegExp(this.filtro.trim(), "i");
         return this.produtos.filter(produto => exp.test(produto.nome));
-      }else{
+      } else {
         return this.produtos;
       }
     }
   },
 
-//Assim que a pagina por criada
+  methods: {
+    remove(produto) {
+      if (confirm("Confirma a operação?")) {
+        alert(`Remover a foto ${produto.nome}`);
+      }
+    }
+  },
+
+  //Assim que a pagina por criada
   created() {
     this.$http
       .get("http://localhost:5000/api/product")
       .then(res => res.json())
       .then(produtos => (this.produtos = produtos))
       .catch(erro => {
-        if(!erro.status){
+        if (!erro.status) {
           alert("Erro de conexão, tente novamente mais tarde.");
         }
       });
-  },
-  
+  }
 };
 </script>
 
 <style>
 /* Estilo do componente */
-
 
 .centralizado {
   text-align: center;
@@ -87,10 +95,8 @@ export default {
   display: inline-block;
 }
 
-.filtro{
+.filtro {
   display: block;
   width: 100%;
 }
-
-
 </style>
