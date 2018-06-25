@@ -9,9 +9,14 @@
       <li class="lista-produtos-item" v-for="produto in fotosComFiltro">
         <meu-painel :titulo="produto.nome">
           <figure> 
-            <imagem-responsiva :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
+            <imagem-responsiva v-meu-transform="{incremento:15, animacao:true}" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
           </figure>
-          <meu-botao tipo="button" rotulo="Remover" @click.native="remove(produto)"></meu-botao>
+          <meu-botao 
+            tipo="button" 
+            rotulo="Remover" 
+            :confirmacao="true" 
+            estilo="perigo"
+            @botaoAtivado="remove(produto)"></meu-botao>
         </meu-painel>      
       </li>
     </ul>
@@ -59,9 +64,7 @@ export default {
 
   methods: {
     remove(produto) {
-      if (confirm("Confirma a operação?")) {
         alert(`Remover a foto ${produto.nome}`);
-      }
     }
   },
 

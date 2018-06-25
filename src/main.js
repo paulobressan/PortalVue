@@ -7,6 +7,9 @@ import VueRoter from 'vue-router';
 //Importando as rotas da aplicação
 import {routes} from './routes';
 
+//importando diretivas 
+import './directives/Transform';
+
 //Usando bibliotecas de terceiros.
 Vue.use(VueResource);
 Vue.use(VueRoter);
