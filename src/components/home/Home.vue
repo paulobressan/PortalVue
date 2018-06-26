@@ -9,7 +9,7 @@
       <li class="lista-produtos-item" v-for="produto in fotosComFiltro">
         <meu-painel :titulo="produto.nome">
           <figure> 
-            <imagem-responsiva v-meu-transform="{incremento:15, animacao:true}" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
+            <imagem-responsiva v-meu-transform:scale.animacao="1.2" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
           </figure>
           <meu-botao 
             tipo="button" 
@@ -29,6 +29,9 @@ import Painel from "../shared/painel/Painel.vue";
 import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue";
 import Botao from "../shared/botao/botao.vue";
 
+//Importando diretivas
+import transform from '../../directives/Transform';
+
 //dados do componente
 export default {
   //Propriedade components para usar outros componentes, desde que estaja importado.
@@ -36,6 +39,10 @@ export default {
     "meu-painel": Painel,
     "imagem-responsiva": ImagemResponsiva,
     "meu-botao": Botao
+  },
+  //A propriedade directives define as diretivas do componente diretivas.
+  directives:{
+    'meu-transform':transform
   },
   name: "app",
   data() {
