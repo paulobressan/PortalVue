@@ -9,7 +9,7 @@
       <li class="lista-produtos-item" v-for="produto in fotosComFiltro">
         <meu-painel :titulo="produto.nome">
           <figure> 
-            <imagem-responsiva v-meu-transform="{incremento:15, animacao:true}" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
+            <imagem-responsiva v-meu-transform.animacao="15" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
           </figure>
           <meu-botao 
             tipo="button" 

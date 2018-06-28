@@ -11,19 +11,15 @@ Vue.directive('meu-transform', {
 
         //Adicionando o evento double click no elemento e para cada double click incrementa 90 em current.
         el.addEventListener('dblclick', ()=>{
-            let incremento = 90;
+            //pegando o valor passado para a diretiva
+            let incremento = binding.value || 90;
             let animacao = false;
-            if(binding.value){
-                //pegando o valor passado para a diretiva
-                incremento = binding.value.incremento;
-                animacao = binding.value.animacao;
-            }
 
             //incrementando o current.
             current+= incremento;
             //Adicionando um estilo no elemento
             el.style.transform = `rotate(${current}deg)`;
-            if(animacao) el.style.transition = 'transform 0.5s';
+            if(binding.modifiers.animacao) el.style.transition = 'transform 0.5s';
         });
     }
 });
