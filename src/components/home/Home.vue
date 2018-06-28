@@ -9,17 +9,18 @@
     <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre por parte do titulo...">
     <ul class="lista-produtos">
       <li class="lista-produtos-item" v-for="produto in fotosComFiltro">
-        <meu-painel :titulo="produto.nome">
-          <figure> 
-            <imagem-responsiva v-meu-transform:scale.animacao="1.2" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
-          </figure>
-          <meu-botao 
-            tipo="button" 
-            rotulo="Remover" 
-            :confirmacao="true" 
-            estilo="perigo"
-            @botaoAtivado="remove(produto)"></meu-botao>
-        </meu-painel>      
+        
+          <meu-painel :titulo="produto.nome">
+            <figure> 
+              <imagem-responsiva v-meu-transform:scale.animacao="1.2" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
+            </figure>
+            <meu-botao 
+              tipo="button" 
+              rotulo="Remover" 
+              :confirmacao="true" 
+              estilo="perigo"
+              @botaoAtivado="remove(produto)"></meu-botao>
+          </meu-painel>             
       </li>
     </ul>
   </div>
@@ -32,7 +33,7 @@ import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue";
 import Botao from "../shared/botao/botao.vue";
 
 //Importando diretivas
-import transform from '../../directives/Transform';
+import transform from "../../directives/Transform";
 
 //dados do componente
 export default {
@@ -43,8 +44,8 @@ export default {
     "meu-botao": Botao
   },
   //A propriedade directives define as diretivas do componente diretivas.
-  directives:{
-    'meu-transform':transform
+  directives: {
+    "meu-transform": transform
   },
   name: "app",
   data() {
@@ -53,7 +54,7 @@ export default {
       titulo: "Produtos",
       produtos: [],
       filtro: "",
-      mensagem: ''
+      mensagem: ""
     };
   },
 
@@ -75,15 +76,17 @@ export default {
   methods: {
     remove(produto) {
       //chamando serviço de delete da api
-        this.$http.delete(`http://localhost:5000/api/product/${produto.id}`)
-        .then(()=> {
+      this.$http.delete(`http://localhost:5000/api/product/${produto.id}`).then(
+        () => {
           this.mensagem = "Foto removida com sucesso.";
           let indice = this.produtos.indexOf(produto);
           this.produtos.splice(indice, 1);
-          }, erro=>{
+        },
+        erro => {
           console.log(erro);
-          this.mensagem = 'Não foi possivel remover a foto.';
-        });
+          this.mensagem = "Não foi possivel remover a foto.";
+        }
+      );
     }
   },
 
@@ -92,7 +95,7 @@ export default {
     this.$http
       .get("http://localhost:5000/api/product")
       .then(res => res.json())
-      .then(produtos => this.produtos = produtos)
+      .then(produtos => (this.produtos = produtos))
       .catch(erro => {
         if (!erro.status) {
           alert("Erro de conexão, tente novamente mais tarde.");
@@ -102,7 +105,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* Estilo do componente */
 
 .centralizado {
