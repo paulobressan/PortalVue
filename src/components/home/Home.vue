@@ -3,6 +3,8 @@
   <div>
     <h1 class="centralizado">{{titulo}}</h1>
     
+  <p class="centralizado" v-show="mensagem">{{mensagem}}</p>
+
     <!-- Input para realizar filtro. Nele contem o evento v-on:input que atualiza a propriedade filtro. -->
     <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre por parte do titulo...">
     <ul class="lista-produtos">
@@ -50,7 +52,8 @@ export default {
     return {
       titulo: "Produtos",
       produtos: [],
-      filtro: ""
+      filtro: "",
+      mensagem: ''
     };
   },
 
@@ -71,7 +74,16 @@ export default {
 
   methods: {
     remove(produto) {
-        alert(`Remover a foto ${produto.nome}`);
+      //chamando serviço de delete da api
+        this.$http.delete(`http://localhost:5000/api/product/${produto.id}`)
+        .then(()=> {
+          this.mensagem = "Foto removida com sucesso.";
+          let indice = this.produtos.indexOf(produto);
+          this.produtos.splice(indice, 1);
+          }, erro=>{
+          console.log(erro);
+          this.mensagem = 'Não foi possivel remover a foto.';
+        });
     }
   },
 
@@ -80,7 +92,7 @@ export default {
     this.$http
       .get("http://localhost:5000/api/product")
       .then(res => res.json())
-      .then(produtos => (this.produtos = produtos))
+      .then(produtos => this.produtos = produtos)
       .catch(erro => {
         if (!erro.status) {
           alert("Erro de conexão, tente novamente mais tarde.");

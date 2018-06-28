@@ -8,20 +8,22 @@
     <form @submit.prevent="gravar()">
       <div class="controle">
         <label for="titulo">NOME</label>
-        <input id="titulo" autocomplete="off" :value="produto.nome" @input="produto.nome = $event.target.value">
+        <!-- O lazy é o carregamento preguiçoso, quando terminar de digitar vai ser aplicado o bind -->
+        <input id="titulo" autocomplete="off" v-model.lazy="produto.nome">
       </div>
 
       <div class="controle">
         <label for="url">URL</label>
-        <input id="url" autocomplete="off" :value="produto.url" @input="produto.url = $event.target.value">
+        <input id="url" autocomplete="off" v-model.lazy="produto.url">
         <div class="bloco-img">
-            <imagem-responsiva :url="produto.url" :titulo="produto.nome"/>
+            <!-- Só vai exibir o titulo da imagem se existir uma url, ou melhor quando o usuario terminar de digitar a url e nome (Opcional) -->
+            <imagem-responsiva v-show="produto.url" :url="produto.url" :titulo="produto.nome"/>
         </div>
       </div>
 
       <div class="controle">
         <label for="descricao">DESCRIÇÃO</label>
-        <textarea id="descricao" autocomplete="off" :value="produto.descricao" @input="produto.descricao = $event.target.value"></textarea>
+        <textarea id="descricao" autocomplete="off" v-model="produto.descricao"></textarea>
       </div>
 
       <div class="centralizado">
@@ -36,7 +38,7 @@
 <script>
 import ImagemResponsiva from "../../shared/imagem-responsiva/ImagemResponsiva.vue";
 import Botao from "../../shared/botao/Botao.vue";
-import { Produto } from "../../../models/Produto.js";
+import Produto from "../../../domain/produto/Produto.js";
 
 export default {
   components: {
@@ -50,8 +52,10 @@ export default {
   },
   methods: {
     gravar() {
-      console.log(this.produto);
-      this.limpar();
+      //como estamos usando o vue-resource, podemos chamar this(global vue object) e usar o $http do vue-resource.
+      this.$http.post('http://localhost:5000/api/product', this.produto)
+      .then(() =>this.limpar(), erro => console.log(erro));
+      
     },
     limpar() {
       this.produto = new Produto();
