@@ -9,7 +9,7 @@
     <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre por parte do titulo...">
     <ul class="lista-produtos">
       <li class="lista-produtos-item" v-for="produto in fotosComFiltro">
-        
+        <transition name="painel">
           <meu-painel :titulo="produto.nome">
             <figure> 
               <imagem-responsiva v-meu-transform:scale.animacao="1.2" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
@@ -21,6 +21,7 @@
               estilo="perigo"
               @botaoAtivado="remove(produto)"></meu-botao>
           </meu-painel>             
+        </transition>
       </li>
     </ul>
   </div>
@@ -31,6 +32,9 @@
 import Painel from "../shared/painel/Painel.vue";
 import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue";
 import Botao from "../shared/botao/botao.vue";
+
+//importando serviço produto
+import ProdutoService from "../../domain/produto/ProdutoService.js";
 
 //Importando diretivas
 import transform from "../../directives/Transform";
@@ -76,7 +80,8 @@ export default {
   methods: {
     remove(produto) {
       //chamando serviço de delete da api
-      this.$http.delete(`http://localhost:5000/api/product/${produto.id}`).then(
+      //configuração manual do resource
+      this.service.remove(produto.id).then(
         () => {
           this.mensagem = "Foto removida com sucesso.";
           let indice = this.produtos.indexOf(produto);
@@ -92,15 +97,39 @@ export default {
 
   //Assim que a pagina por criada
   created() {
-    this.$http
-      .get("http://localhost:5000/api/product")
-      .then(res => res.json())
-      .then(produtos => (this.produtos = produtos))
-      .catch(erro => {
-        if (!erro.status) {
-          alert("Erro de conexão, tente novamente mais tarde.");
-        }
-      });
+    //criando instancia service para usar o service de produtos
+    this.service = new ProdutoService(this.$resource);
+    this.service
+      .lista()
+      .then(produtos => (this.produtos = produtos), erro => console.log(erro));
+
+    //METODO ANTIGO
+    //Configurando manualmente a requisição do vue-resource
+    //Retorno do resource e criando uma propriedade dinamicamente
+    // this.resource = this.$resource("api/product{/id}");
+    //o {/id} vai ser utilizado para deletar, a resource é utlizada em outros metodos,
+    //portando o query sabe que que não estamos passando nenhum parametro na busca então ele descarta o {/id}
+    //Buscar ou por baixo dos panos GET
+    // this.resource
+    //   .query()
+    //   .then(res => res.json())
+    //   .then(produtos => (this.produtos = produtos))
+    //   .catch(erro => {
+    //     if (!erro.status) {
+    //       alert("Erro de conexão, tente novamente mais tarde.");
+    //     }
+    //   });
+
+    //Fim da configuração
+    // this.$http
+    //   .get("api/product")
+    //   .then(res => res.json())
+    //   .then(produtos => (this.produtos = produtos))
+    //   .catch(erro => {
+    //     if (!erro.status) {
+    //       alert("Erro de conexão, tente novamente mais tarde.");
+    //     }
+    //   });
   }
 };
 </script>
@@ -123,5 +152,15 @@ export default {
 .filtro {
   display: block;
   width: 100%;
+}
+
+.painel-enter,
+.painel-leave-active {
+  opacity: 0;
+}
+
+.painel-enter-active,
+.painel-leave-active {
+  transition: opacity 0.4s;
 }
 </style>

@@ -40,6 +40,9 @@ import ImagemResponsiva from "../../shared/imagem-responsiva/ImagemResponsiva.vu
 import Botao from "../../shared/botao/Botao.vue";
 import Produto from "../../../domain/produto/Produto.js";
 
+//importando serviço
+import ProdutoService from '../../../domain/produto/ProdutoService.js';
+
 export default {
   components: {
     "imagem-responsiva": ImagemResponsiva,
@@ -50,12 +53,23 @@ export default {
       produto: new Produto()
     };
   },
+
+  created() {
+    this.service = new ProdutoService(this.$resource);
+  },
   methods: {
     gravar() {
+      this.service
+        .cadastra(this.produto)
+        .then(() => this.limpar(), erro => console.log(erro));
       //como estamos usando o vue-resource, podemos chamar this(global vue object) e usar o $http do vue-resource.
-      this.$http.post('http://localhost:5000/api/product', this.produto)
-      .then(() =>this.limpar(), erro => console.log(erro));
-      
+      // this.$http.post('api/product', this.produto)
+      // .then(() =>this.limpar(), erro => console.log(erro));
+
+      //vue-resource configurada amnual
+      // this.resource
+      //   .save(this.produto)
+      //   .then(() => this.limpar(), erro => console.log(erro));
     },
     limpar() {
       this.produto = new Produto();
@@ -86,7 +100,7 @@ export default {
 .centralizado {
   text-align: center;
 }
-.bloco-img{
-    width: 250px;
+.bloco-img {
+  width: 250px;
 }
 </style>

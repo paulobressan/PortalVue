@@ -13,6 +13,8 @@ import {routes} from './routes';
 
 //Usando bibliotecas de terceiros.
 Vue.use(VueResource);
+//adicionando uma url para o vue
+Vue.http.options.root = 'http://localhost:5000/';
 Vue.use(VueRoter);
 
 //Criando o roteador com base nas rotas importadas, com auxilio do VueRouter, ele espera como parametro as rotas importadas.
