@@ -14,6 +14,9 @@
             <figure> 
               <imagem-responsiva v-meu-transform:scale.animacao="1.2" :url="produto.url" :titulo="produto.nome"></imagem-responsiva>       
             </figure>
+            <router-link :to="{name : 'altera', params: {id: produto.id}}">
+            <meu-botao tipo="button" rotulo="alterar"></meu-botao>
+            </router-link>
             <meu-botao 
               tipo="button" 
               rotulo="Remover" 

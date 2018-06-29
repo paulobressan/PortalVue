@@ -5,6 +5,8 @@ import Home from './components/home/Home.vue';
 //Exportando um array constante com nossa rotas
 export const routes = [
     //Path é o caminho e component é o componente importado
-    { path: '', component: Home, titulo: "Home" },
-    { path: '/cadastro', component: Cadastro, titulo: "Cadastro" }
+    { path: '', name: 'home', component: Home, titulo: "Home", menu:true },
+    { path: '/cadastro', name: 'cadastro', component: Cadastro, titulo: "Cadastro", menu:true },
+    { path: '/altera/:id', name: 'altera', component: Cadastro},
+    { path: '*', component: Home }//toda rota invalida vai para essa rota.
 ];

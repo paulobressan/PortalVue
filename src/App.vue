@@ -21,7 +21,8 @@ export default {
 
   data(){
     return {
-      routes
+      //Só vai entrar nas rotas dinamica para ser exbido no menu quem esta ativo menu
+      routes: routes.filter(r=> r.menu)
     }
   }
 }
