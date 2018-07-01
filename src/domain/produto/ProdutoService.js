@@ -14,16 +14,25 @@ export default class ProdutoService {
         return new Promise((resolve, reject) => {
             this._resource
                 .query()
-                .then(res => resolve(res.json()), erro => reject(erro));
+                .then(res => resolve(res.json()), erro => {
+                    console.log(erro);
+                    reject("Não foi possivel obter os produtos.");
+                });
         });
     }
 
-    //cadastro um produto
+    //cadastro um produto e altera se tiver id
     cadastra(produto) {
         return new Promise((resolve, reject) => {
-            this._resource
-                .save(produto)
-                .then(res => resolve(res.json()), erro => reject(erro));
+            if (produto.id) {
+                this._resource
+                    .update(produto)
+                    .then(res => resolve(res.json()), erro => reject(erro));
+            } else {
+                this._resource
+                    .save(produto)
+                    .then(res => resolve(res.json()), erro => reject(erro));
+            }
         })
     }
 
@@ -32,7 +41,19 @@ export default class ProdutoService {
         return new Promise((resolve, reject) => {
             this._resource
                 .delete({ id })
-                .then(res => resolve(res), erro => reject(erro));
+                .then(res => resolve(res), erro => {
+                    console.log(erro);
+                    reject("Não foi possivel remover o  produto.");
+                });
+        })
+    }
+
+    //Busca produto por id 
+    busca(id) {
+        return new Promise((resolve, reject) => {
+            this._resource
+                .get({ id })
+                .then(res => resolve(res.json()), erro => reject(erro));
         })
     }
 }

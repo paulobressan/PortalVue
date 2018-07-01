@@ -91,8 +91,7 @@ export default {
           this.produtos.splice(indice, 1);
         },
         erro => {
-          console.log(erro);
-          this.mensagem = "Não foi possivel remover a foto.";
+          this.mensagem = erro;
         }
       );
     }
@@ -104,7 +103,9 @@ export default {
     this.service = new ProdutoService(this.$resource);
     this.service
       .lista()
-      .then(produtos => (this.produtos = produtos), erro => console.log(erro));
+      .then(produtos => (this.produtos = produtos), erro => {
+        this.mensagem = erro;
+        });
 
     //METODO ANTIGO
     //Configurando manualmente a requisição do vue-resource

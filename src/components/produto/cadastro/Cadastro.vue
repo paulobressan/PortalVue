@@ -3,7 +3,8 @@
   <div>
     <h1 class="centralizado">Cadastro</h1>
     <h2 class="centralizado"></h2>
-
+    <h2 v-if="produto.id" class="centralizado">Alterando</h2>
+    <h2 v-else class="centralizado">Incluindo</h2>
     <!-- criando o evento submit retirando o evento nativo-->
     <form @submit.prevent="gravar()">
       <div class="controle">
@@ -50,18 +51,29 @@ export default {
   },
   data() {
     return {
-      produto: new Produto()
+      produto: new Produto(),
+      //Capturando o valor passado na rota
+      id: this.$route.params.id
     };
   },
 
   created() {
     this.service = new ProdutoService(this.$resource);
+    //Verifica se foi passado um id para carregar o produto e altera-lo ou cadastrar um novo
+    if(this.id){
+      this.service.busca(this.id)
+        .then(res => this.produto = res, erro => console.log(erro));
+    }
   },
   methods: {
     gravar() {
       this.service
         .cadastra(this.produto)
-        .then(() => this.limpar(), erro => console.log(erro));
+        .then(() => {
+          //Enviando para outra rota depois que atualizar
+          if(this.id) this.$router.push({name: 'home' });
+          this.limpar();
+        }, erro => console.log(erro));
       //como estamos usando o vue-resource, podemos chamar this(global vue object) e usar o $http do vue-resource.
       // this.$http.post('api/product', this.produto)
       // .then(() =>this.limpar(), erro => console.log(erro));
